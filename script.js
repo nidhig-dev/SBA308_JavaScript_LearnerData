@@ -101,23 +101,7 @@ function getLearnerData(course, ag, submissions) {
         }
         // Calling a function that returns unique and valid learner ids 
         learnerArr = [];
-         learnerArr = getUniqueLearnerId(submissions);
-
-        // for (let i = 0; i < submissions.length; i++) {
-        //     // console.log("Learner id is",submissions[i].learner_id);
-        //     // Adding all learner ids in an array
-        //     learnerArr[i] = submissions[i].learner_id;
-
-        //     // Checking if learner id is a number
-        //     if (typeof learnerArr[i] != 'number') {
-        //         throw new Error('Invalid input: Learner Id should be a number');
-        //     }
-        // }
-
-
-        // // getting unique learner ids
-        // learnerArr = [...new Set(learnerArr)];
-        // console.log(learnerArr);
+        learnerArr = getUniqueLearnerId(submissions);        
         today = today.toISOString().split('T')[0];
         //for each learner
         for (let i = 0; i < learnerArr.length; i++) {
@@ -126,19 +110,21 @@ function getLearnerData(course, ag, submissions) {
             // console.log("final obj is", finalObj);
             // iterate over each element in the array 'assignments' in object 'ag'
             ag.assignments.forEach((asgmnt, k) => {
-
+                 
                 // iterate over each element in the array submissions to get learner details
 
-                submissions.forEach((learner, j) => {
+                submissions.forEach((learner, j) => {                     
                     // match assignment ids- if id of assignment is same as assignment id of learner>>grab points possible & score 
                     // for assignment 1 and learner 125 get 50 and 47
                     //For assignment 2 and learner 125 get 150 and 150
-
                     // Check if assignment ids are number
                     if (typeof asgmnt.id != 'number' && typeof learner.learner_id != "number") {
                         throw new Error('Invalid input: Assignment Id should be a number');
                     }
+                    // For a matching learner id and assignment id,
+                    // grab score earned and possible points,else skip to next assignment id
                     if (asgmnt.id == learner.assignment_id && learnerArr[i] == learner.learner_id) {
+                        
                         // points possible cant be zero and has to be a number and learner scores have to be number too
                         if (asgmnt.points_possible <= 0 | typeof asgmnt.points_possible != 'number') {
                             throw new Error('Invalid input: Total points must be a number greater than zero.');
@@ -153,19 +139,21 @@ function getLearnerData(course, ag, submissions) {
                         //due date has to be valid date without time format-----------------------------
                         // if valid date is entered then !NaN (valid date) returns true
                         // for invalid date-get time returns NaN
-                            if(isNaN(new Date(asgmnt.due_at).getTime())==true)
-                            {
-                                throw new Error('Invalid input: Enter due date in YYYY/MM/DD or MM/DD/YYYY format');
-                            }
+                        if(isNaN(new Date(asgmnt.due_at).getTime())==true)
+                        {
+                            throw new Error('Invalid input: Enter due date in YYYY/MM/DD or MM/DD/YYYY format');
+                        }
                         //submitted date has to be valid date without time format-------------------------
                         // for invalid date-get time returns NaN
                         if (isNaN(new Date(learner.submission.submitted_at).getTime()) == true) {
                             throw new Error('Invalid input: Enter submitted date in YYYY/MM/DD or MM/DD/YYYY format');
                         }
-                        ptPoss[j] = asgmnt.points_possible;
+                        // calling a function that calculates avg of each assignment
+                    //    eachAvg=getEachAsgmtAvg(asgmnt,learner,finalObj,j);
+                       ptPoss[j] = asgmnt.points_possible;
                         scoreArr[j] = learner.submission.score;
 
-                        //Check if assignment is due in future, then exclude it in else statement
+                        // Check if assignment is due in future, then exclude it in else statement
                         if (asgmnt.due_at < today) {
                             // if submitted late substract 10% but include it
                             if (asgmnt.due_at < learner.submission.submitted_at) {
@@ -173,30 +161,20 @@ function getLearnerData(course, ag, submissions) {
                                 scoreArr[j] = scoreArr[j] - (.1 * ptPoss[j]);
 
                             }
-
                             //Find that assignment's avg weight    
-                            eachAvg = (scoreArr[j] / ptPoss[j]).toFixed(2);
+                            //parse float removes trailing zeroes if any else if will go up to 3 decimal places
+                            eachAvg = parseFloat((scoreArr[j] / ptPoss[j]).toFixed(3));
                             finalObj[learner.assignment_id] = eachAvg;
-                            //  console.log("final obj is", finalObj);
-
-                            // console.log("Each avg is",eachAvg);                   
                             totalScore += scoreArr[j];
-                            totalPossScore += ptPoss[j];
-                            // console.log("total score so far", totalScore);
-                            // console.log("Total possible points so far", totalPossScore);
-                            // console.log(`score array for learner so far ${learnerArr[i]}is:${totScore}`)
-                            // console.log(`Points possible array for learner so far ${learnerArr[i]}is:${totPtPoss}`)                    
-                        }
-                    }
+                            totalPossScore += ptPoss[j];                            
+                        }                        
+                    }                   
 
                 });
-                // console.log("total score so far", totalScore);
-                // console.log("Total possible points so far", totalPossScore);
-                avgWgt = (totalScore / totalPossScore).toFixed(2);
-                // console.log("Total Avg weight is", avgWgt);           
-                finalObj.avg = avgWgt;
-                //console.log("final obj is", finalObj);
-
+                //parse float removes trailing zeroes if any else if will go up to 3 decimal places
+                avgWgt = parseFloat((totalScore / totalPossScore).toFixed(3));
+                finalObj.avg = avgWgt;    
+                          
             })
 
             totScore = [];
@@ -205,10 +183,14 @@ function getLearnerData(course, ag, submissions) {
             avgWgt = 0;
             totalScore = 0;
             totalPossScore = 0;
+           
             //created a shallow copy of my object
             // Without this my result array was being over written by second object data.
             // result.concat() copies the array 
             result.push({ ...finalObj });
+            // Emptying the object so that it picks fresh data for new learner
+            finalObj={};
+          //  result.push( JSON.parse(JSON.stringify(finalObj) ));
         }//end of 1st learner
         return result;
     }
@@ -238,4 +220,7 @@ function getUniqueLearnerId(submissions){
     // getting unique learner ids
     learnerArr = [...new Set(learnerArr)];
     return(learnerArr);
+}
+function getEachAsgmtAvg(asgmnt, learner, finalObj, j){
+    return(eachAvg);
 }
