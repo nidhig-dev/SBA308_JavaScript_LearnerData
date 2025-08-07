@@ -153,15 +153,15 @@ function getLearnerData(course, ag, submissions) {
                         //due date has to be valid date without time format-----------------------------
                         // if valid date is entered then !NaN (valid date) returns true
                         // for invalid date-get time returns NaN
-                        //     if(isNaN(new Date(asgmnt.due_at).getTime())==true)
-                        //     {
-                        //         throw new Error('Invalid input: Enter due date in YYYY/MM/DD or MM/DD/YYYY format');
-                        //     }
-                        // //submitted date has to be valid date without time format-------------------------
-                        // // for invalid date-get time returns NaN
-                        // if (isNaN(new Date(learner.submission.submitted_at).getTime()) == true) {
-                        //     throw new Error('Invalid input: Enter submitted date in YYYY/MM/DD or MM/DD/YYYY format');
-                        // }
+                            if(isNaN(new Date(asgmnt.due_at).getTime())==true)
+                            {
+                                throw new Error('Invalid input: Enter due date in YYYY/MM/DD or MM/DD/YYYY format');
+                            }
+                        //submitted date has to be valid date without time format-------------------------
+                        // for invalid date-get time returns NaN
+                        if (isNaN(new Date(learner.submission.submitted_at).getTime()) == true) {
+                            throw new Error('Invalid input: Enter submitted date in YYYY/MM/DD or MM/DD/YYYY format');
+                        }
                         ptPoss[j] = asgmnt.points_possible;
                         scoreArr[j] = learner.submission.score;
 
