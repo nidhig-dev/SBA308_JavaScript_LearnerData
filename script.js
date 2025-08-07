@@ -101,22 +101,22 @@ function getLearnerData(course, ag, submissions) {
         }
         // Calling a function that returns unique and valid learner ids 
         learnerArr = [];
-        // learnerArr = getUniqueLearnerId(submissions);
+         learnerArr = getUniqueLearnerId(submissions);
 
-        for (let i = 0; i < submissions.length; i++) {
-            // console.log("Learner id is",submissions[i].learner_id);
-            // Adding all learner ids in an array
-            learnerArr[i] = submissions[i].learner_id;
+        // for (let i = 0; i < submissions.length; i++) {
+        //     // console.log("Learner id is",submissions[i].learner_id);
+        //     // Adding all learner ids in an array
+        //     learnerArr[i] = submissions[i].learner_id;
 
-            // Checking if learner id is a number
-            if (typeof learnerArr[i] != 'number') {
-                throw new Error('Invalid input: Learner Id should be a number');
-            }
-        }
+        //     // Checking if learner id is a number
+        //     if (typeof learnerArr[i] != 'number') {
+        //         throw new Error('Invalid input: Learner Id should be a number');
+        //     }
+        // }
 
 
         // // getting unique learner ids
-        learnerArr = [...new Set(learnerArr)];
+        // learnerArr = [...new Set(learnerArr)];
         // console.log(learnerArr);
         today = today.toISOString().split('T')[0];
         //for each learner
@@ -224,18 +224,18 @@ if (result) {
 }
 
 // This function will return unique learner ids
-// function getUniqueLearnerId(submissions){
-//     for (let i = 0; i < submissions.length; i++) {
-//         // console.log("Learner id is",submissions[i].learner_id);
-//         // Adding all learner ids in an array
-//         learnerArr[i] = submissions[i].learner_id;
+function getUniqueLearnerId(submissions){
+    for (let i = 0; i < submissions.length; i++) {
+        // console.log("Learner id is",submissions[i].learner_id);
+        // Adding all learner ids in an array
+        learnerArr[i] = submissions[i].learner_id;
 
-//         // Checking if learner id is a number
-//         if (typeof learnerArr[i] != 'number') {
-//             throw new Error('Invalid input: Learner Id should be a number');
-//         }
-//     }
-//     // getting unique learner ids
-//     learnerArr = [...new Set(learnerArr)];
-//     return(learnerArr);
-// }
+        // Checking if learner id is a number
+        if (typeof learnerArr[i] != 'number') {
+            throw new Error('Invalid input: Learner Id should be a number');
+        }
+    }
+    // getting unique learner ids
+    learnerArr = [...new Set(learnerArr)];
+    return(learnerArr);
+}
