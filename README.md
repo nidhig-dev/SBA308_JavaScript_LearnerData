@@ -115,6 +115,13 @@ const result = [
 - ✅Commit frequently to the git repository.	5%
 - ✅Include a README file that contains a description of your application.	2%
 
+## Reflection
 
+#### 1. What could you have done differently during the planning stages of your project to make the execution easier?
+
+  * I could have created different functions first that were doing their designated task individually and then connected them all in the main function for better modulariztion.
+
+#### 2. What would you add to, or change about your application if given more time?
+  * I would like to modularize it better. If I had more time, I would re-structure my code better.
 
 
